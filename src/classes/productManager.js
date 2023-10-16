@@ -89,36 +89,21 @@ class ProductManager{
         }
     }   
     
-    updateProduct = async (id, infoNueva) => {
-        const product = await this.getProductById(id)
-        const newProduct = {...product, ...infoNueva}
+    updateProduct = async (id, title, description, price, thumbnail, code, stock) => {
 
         const products = await this.getProducts()
+    
+        const productObject = {id, title, description, price, thumbnail, code, stock}
+        const productoFiltrado = products.filter(prod => prod.id === id)
+    
+        const updatedProduct = {...productoFiltrado[0], ...productObject}
+    
         const index = products.findIndex(prod => prod.id === id)
+        products.slice(index, 1, updatedProduct )
         
-        products[index] = newProduct
-
-        console.log(product)
-        console.log('--------------')
-        console.log(newProduct)
-        console.log('--------------')
-        console.log(index)
-        console.log('--------------')
-        console.log(products)
-        //await fs.promises.writeFile(path, JSON.stringify(productos, null, '\t'))
+    
+        await fs.promises.writeFile(path, JSON.stringify(products, null, '\t'))
+        
     }
 }
 
-const productManager = new ProductManager();
-
-//console.log("getProducts", productManager.getProducts())
-//productManager.getProducts()
-//console.log("==================================================================")
-//productManager.addProducts("pantalon", "pantalon negro", 120, "pantalonNegro.jpg", "cod2", 30)
-//productManager.addProducts("remera", "remera roja", 120, "remeraRoja.jpg", "cod4", 30)
-//console.log("==================================================================")
-//console.log("getProducts", productManager.getProductsById("ff68a63e-ee7d-428c-94f7-382a1391c35c"))
-/*console.log("==================================================================")
-console.log("getProductsById", productManager.getProductsById(1))*/
-
-productManager.updateProduct("d6fa6823-a8c7-450a-8d5b-92dbe73ea6de", "pantalon")
