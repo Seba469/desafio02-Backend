@@ -10,9 +10,9 @@ class ProductManager{
             const data = await fs.promises.readFile(path, "utf-8")
             const products = JSON.parse(data)
             
-            console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-            console.log ("productos", products)
-            console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            //console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            //console.log ("productos", products)
+            //console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
             return products
         }
@@ -66,7 +66,7 @@ class ProductManager{
                 console.log("Not found")
                 return
             }else{
-                console.log(productoFiltrado)
+                //console.log(productoFiltrado)
                 return productoFiltrado
             }  
         } 
@@ -89,7 +89,7 @@ class ProductManager{
         }
     }   
     
-    updateProduct = async (id, title, description, price, thumbnail, code, stock) => {
+    /*updateProduct = async (id, title, description, price, thumbnail, code, stock) => {
 
         const products = await this.getProducts()
     
@@ -104,6 +104,24 @@ class ProductManager{
     
         await fs.promises.writeFile(path, JSON.stringify(products, null, '\t'))
         
+    }*/
+
+    updateProduct = async (id, infoNueva) => {
+        try{
+            const productos = await this.getProducts()
+            const indice = productos.findIndex(prod => prod.id === id)
+
+            productos[indice] = {...productos[indice], ...infoNueva}
+
+            console.log("producto actualizado correctamente")
+            await fs.promises.writeFile(path, JSON.stringify(productos, null, '\t'))
+        }
+        catch(error){
+            console.log(`Ocurrio un error ${error.message}`)
+        }
     }
 }
 
+const productManager = new ProductManager();
+
+productManager.updateProduct("d6fa6823-a8c7-450a-8d5b-92dbe73ea6de", ["pantalon", "pantalon negro", 120, "pantalonNegro.jpg", "cod1", 30])
